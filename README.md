@@ -31,8 +31,8 @@ AelfGPT is a powerful tool designed to enhance the development experience for Ae
 2. **Clone** your forked repository:
 
    ```bash
-   git clone https://github.com/your-username/smart-contract-debugger-generator.git
-   cd smart-contract-debugger-generator
+   git clone https://github.com/your-username/aelfgpt.git
+   cd aelfgpt
    ```
 
 ### 2. Create and Configure the `.env` File
@@ -97,34 +97,145 @@ streamlit run app.py
 
 Access the application at `http://localhost:8501`.
 
-## Usage
+Yes, you’re right. The `requirements.txt` file is used to install dependencies within the Docker container for Cloud Run deployment. Let's clarify the deployment process for Cloud Run by including the setup for `requirements.txt` in the Dockerfile and instructions. 
 
-1. **Smart Contract Debugging**:
-   - Paste your .cs code into the text area.
-   - Select "Debug Code" and click "Submit Debug Request".
-   - View the debugging results provided by the AI.
+Here’s the updated README section with precise details for Cloud Run deployment:
 
-2. **Smart Contract Generation**:
-   - Paste your .cs code into the text area.
-   - Select "Generate Code" and click "Submit Generate Request".
-   - View the generated code improvements.
-
-3. **Chat with Aelf Documentation**:
-   - Navigate to the chat section to interact with Aelf documentation.
-   - Ask questions and receive AI-powered responses based on the documentation.
-
-4. **Aelf Block Exploration**:
-   - Use the block explorer functionalities to retrieve and view various blockchain data.
+---
 
 ## Deployment
 
-To deploy the Streamlit application using Google Cloud Run:
+### Deploy on Google Cloud Platform (GCP)
 
-1. **Deploy the App**:
-   - Follow the Google Cloud Run documentation to deploy your Streamlit app. 
+**Streamlit** can be deployed on Google Cloud Platform (GCP) using two popular services: **App Engine** and **Cloud Run**.
 
-2. **Access the Deployed App**:
-   - Once deployed, you will receive a URL to access your application online.
+#### App Engine Deployment
+
+1. **Install Required Tools**:
+   - Install the [Google Cloud SDK](https://cloud.google.com/sdk/docs/install).
+   - Install Streamlit:
+
+     ```bash
+     pip install streamlit
+     ```
+
+2. **Create a Streamlit App**:
+   - Write a simple Streamlit app and save it as `app.py`:
+
+     ```python
+     import streamlit as st
+
+     st.title("Hello, Streamlit on App Engine!")
+     st.write("This is a simple Streamlit app running on Google App Engine.")
+     ```
+
+3. **Create an `app.yaml` Configuration File**:
+   - Create a file named `app.yaml` with the following content:
+
+     ```yaml
+     runtime: python39
+
+     entrypoint: streamlit run app.py --server.enableCORS false --browser.serverAddress 0.0.0.0 --browser.gatherUsageStats false --server.port $PORT
+     ```
+
+4. **Deploy the App to App Engine**:
+   - Authenticate with Google Cloud:
+
+     ```bash
+     gcloud auth login
+     ```
+
+   - Initialize your project:
+
+     ```bash
+     gcloud init
+     ```
+
+   - Deploy the app:
+
+     ```bash
+     gcloud app deploy
+     ```
+
+5. **Access the App**:
+   - Open your app in a browser:
+
+     ```bash
+     gcloud app browse
+     ```
+
+#### Cloud Run Deployment
+
+1. **Install Required Tools**:
+   - Install the [Google Cloud SDK](https://cloud.google.com/sdk/docs/install).
+   - Install [Docker](https://docs.docker.com/get-docker/).
+   - Install Streamlit:
+
+     ```bash
+     pip install streamlit
+     ```
+
+2. **Create a Streamlit App**:
+   - Follow the same steps as in the App Engine deployment.
+
+3. **Create a `Dockerfile`**:
+   - Create a `Dockerfile` with the following content:
+
+     ```dockerfile
+     # Use the official Python image from the Docker Hub
+     FROM python:3.9-slim
+
+     # Set the working directory in the container
+     WORKDIR /app
+
+     # Copy the requirements.txt file into the container
+     COPY requirements.txt .
+
+     # Install dependencies from requirements.txt
+     RUN pip install -r requirements.txt
+
+     # Copy the rest of the application code into the container
+     COPY . .
+
+     # Run the Streamlit app
+     CMD ["streamlit", "run", "app.py", "--server.enableCORS", "false", "--browser.serverAddress", "0.0.0.0", "--browser.gatherUsageStats", "false", "--server.port", "8080"]
+     ```
+
+   - Create a `requirements.txt` file in the root directory with the following content:
+
+     ```
+     streamlit
+     ```
+
+4. **Build and Deploy the Container to Cloud Run**:
+   - Authenticate with Google Cloud:
+
+     ```bash
+     gcloud auth login
+     ```
+
+   - Initialize your project:
+
+     ```bash
+     gcloud init
+     ```
+
+   - Build the container:
+
+     ```bash
+     gcloud builds submit --tag gcr.io/PROJECT-ID/streamlit-app
+     ```
+
+   - Deploy the container:
+
+     ```bash
+     gcloud run deploy --image gcr.io/PROJECT-ID/streamlit-app --platform managed --allow-unauthenticated
+     ```
+
+5. **Access the App**:
+   - The deployment output will display the URL of your app.
+
+---
 
 ## Contributing
 
