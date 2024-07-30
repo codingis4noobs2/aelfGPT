@@ -19,14 +19,7 @@ https://github.com/user-attachments/assets/72c284b3-2522-4e10-9942-14454ed86c73
    - **Transaction Details**: Get details of specific transactions.
    - **Transaction Pool Status**: Check the status of transactions in the pool.
 
-## Technologies
-
-- **OpenAI GPT-4o**: For advanced code debugging and generation.
-- **Google Gemini**: For enhanced AI capabilities and response accuracy.
-- **MongoDB Atlas**: For managing vector embeddings and the knowledge base.
-- **Streamlit**: For building the interactive web interface.
-
-## Setup and Deployment
+## Setup and Deployment (Local)
 
 ### 1. Fork and Clone the Repository
 
@@ -88,148 +81,120 @@ pip install -r requirements.txt
 
    - **Create Atlas Search**:
      - Select the `docs` collection and create an Atlas Search.
-     - This process may take 1-2 hours. Once done, your vector search should be ready for use.
+     - This process may take 1-2 minutes. Once done, your vector search should have status 'Active' and its ready for use.
 
 ### 5. Run the Application Locally
 
 Run the Streamlit application:
 
 ```bash
-streamlit run app.py
+streamlit run Home.py
 ```
-
-Access the application at `http://localhost:8501`.
-
-Yes, you’re right. The `requirements.txt` file is used to install dependencies within the Docker container for Cloud Run deployment. Let's clarify the deployment process for Cloud Run by including the setup for `requirements.txt` in the Dockerfile and instructions. 
-
-Here’s the updated README section with precise details for Cloud Run deployment:
-
 ---
 
-## Deployment
+## Deployment Guide for Streamlit Application
 
-### Deploy on Google Cloud Platform (GCP)
+This guide provides step-by-step instructions to deploy your Streamlit application on Google Cloud Platform (GCP) using Cloud Run. 
 
-**Streamlit** can be deployed on Google Cloud Platform (GCP) using two popular services: **App Engine** and **Cloud Run**.
+### Prerequisites
 
-#### App Engine Deployment
+1. **Google Cloud Account**: If you don't have a Google Cloud account, create one [here](https://cloud.google.com/).
 
-1. **Install Required Tools**:
-   - Install the [Google Cloud SDK](https://cloud.google.com/sdk/docs/install).
-   - Install Streamlit:
+### Getting Started
 
-     ```bash
-     pip install streamlit
-     ```
+1. **Create a Google Cloud Project**:
+   - Sign in to the Google Cloud Console.
+   - Create a new project or select an existing one.
+   - Enable the billing account (free trial recommended to avoid unintended costs).
 
-2. **Create an `app.yaml` Configuration File**:
-   - Create a file named `app.yaml` with the following content:
+2. **Clone the Repository**:
+   ```bash
+   git clone https://github.com/codingis4noobs2/aelfGPT.git
+   cd aelfGPT
+   ```
 
-     ```yaml
-     runtime: python39
+3. **Authenticate with Google Cloud**:
+   ```bash
+   gcloud auth login
+   ```
 
-     entrypoint: streamlit run Home.py --server.enableCORS false --browser.serverAddress 0.0.0.0 --browser.gatherUsageStats false --server.port $PORT
-     ```
+4. **Initialize Your Project**:
+   ```bash
+   gcloud init
+   ```
 
-3. **Deploy the App to App Engine**:
-   - Authenticate with Google Cloud:
+### Cloud Run Deployment
 
-     ```bash
-     gcloud auth login
-     ```
+#### Create Required Files
 
-   - Initialize your project:
+1. **Dockerfile**:
+   Create a `Dockerfile` with the following content:
+   ```dockerfile
+   # Use an official Python runtime as a parent image
+   FROM python:3.10-slim
 
-     ```bash
-     gcloud init
-     ```
+   # Set the working directory in the container
+   WORKDIR /app
 
-   - Deploy the app:
+   # Copy the requirements file into the container
+   COPY requirements.txt /app/
 
-     ```bash
-     gcloud app deploy
-     ```
+   # Install the required dependencies
+   RUN pip install --no-cache-dir -r requirements.txt
 
-4. **Access the App**:
-   - Open your app in a browser:
+   # Copy the rest of the application code into the container
+   COPY . /app
 
-     ```bash
-     gcloud app browse
-     ```
+   # Expose the port that the app runs on
+   EXPOSE 80
 
-#### Cloud Run Deployment
+   # Command to run the app
+   CMD ["streamlit", "run", "Home.py", "--server.enableCORS", "false", "--browser.serverAddress", "0.0.0.0", "--browser.gatherUsageStats", "false", "--server.port", "80"]
+   ```
 
-1. **Install Required Tools**:
-   - Install the [Google Cloud SDK](https://cloud.google.com/sdk/docs/install).
-   - Install [Docker](https://docs.docker.com/get-docker/).
-   - Install Streamlit:
+2. **app.yaml**:
+   Create an `app.yaml` file with the following content:
+   ```yaml
+   runtime: python310
 
-     ```bash
-     pip install streamlit
-     ```
+   entrypoint: streamlit run Home.py --server.enableCORS false --browser.serverAddress 0.0.0.0 --browser.gatherUsageStats false --server.port $PORT
+   ```
 
-2. **Create a Streamlit App**:
-   - Follow the same steps as in the App Engine deployment.
+#### Build and Deploy
 
-3. **Create a `Dockerfile`**:
-   - Create a `Dockerfile` with the following content:
+1. **Build the Container**:
+   ```bash
+   gcloud builds submit --tag gcr.io/PROJECT-ID/streamlit-app
+   ```
+   Replace `PROJECT-ID` with your actual project ID, which can be found in the top left dropdown in the Google Cloud Console.
+   ![image](https://github.com/user-attachments/assets/85683ece-aa60-4357-8603-6897c0fbbc18)
 
-     ```dockerfile
-     # Use the official Python image from the Docker Hub
-     FROM python:3.9-slim
+2. **Deploy the Container**:
+   ```bash
+   gcloud run deploy --image gcr.io/PROJECT-ID/streamlit-app --platform managed --allow-unauthenticated
+   ```
 
-     # Set the working directory in the container
-     WORKDIR /app
+#### Note
+If you encounter the error `Cloud Run – Failed to start and then listen on the port defined by the PORT`:
 
-     # Copy the requirements.txt file into the container
-     COPY requirements.txt .
+1. Execute the following command:
+   ```bash
+   docker buildx build --platform linux/amd64 -t {project-name} .
+   ```
+2. Then, redeploy the container.
 
-     # Install dependencies from requirements.txt
-     RUN pip install -r requirements.txt
+### Alternative Deployment Method: Cloud Run UI
 
-     # Copy the rest of the application code into the container
-     COPY . .
+You can also deploy the container via the Cloud Run UI in the Google Cloud Console:
+1. Navigate to Cloud Run
+2. Click on create "+ Create Service" Button.
+3. In the Cloud Run UI, select the latest container image and enter a service name for the application.
+   ![image](https://github.com/user-attachments/assets/58a6bc00-c02d-4244-aa32-d534e684c2ec)
+4. Click on the radio button "Allow unauthenticated invocations" so that others can visit your app.
+5. Select the appropriate machine configuration based on your estimated traffic handling and click "Create."
 
-     # Run the Streamlit app
-     CMD ["streamlit", "run", "Home.py", "--server.enableCORS", "false", "--browser.serverAddress", "0.0.0.0", "--browser.gatherUsageStats", "false", "--server.port", "8080"]
-     ```
+You will receive a link to your application in a few minutes.
 
-   - Create a `requirements.txt` file in the root directory with the following content:
-
-     ```
-     streamlit
-     ```
-
-4. **Build and Deploy the Container to Cloud Run**:
-   - Authenticate with Google Cloud:
-
-     ```bash
-     gcloud auth login
-     ```
-
-   - Initialize your project:
-
-     ```bash
-     gcloud init
-     ```
-
-   - Build the container:
-
-     ```bash
-     gcloud builds submit --tag gcr.io/PROJECT-ID/streamlit-app
-     ```
-
-   - Deploy the container:
-
-     ```bash
-     gcloud run deploy --image gcr.io/PROJECT-ID/streamlit-app --platform managed --allow-unauthenticated
-     ```
-
-5. **Access the App**:
-   - The deployment output will display the URL of your app.
-
----
-
-## Contributing
+### Contributing
 
 Contributions are welcome! Please open an issue or submit a pull request if you have suggestions or improvements.
