@@ -2,6 +2,9 @@
 
 AelfGPT is a powerful tool designed to enhance the development experience for Aelf blockchain developers. This application integrates advanced AI technologies to offer intelligent code debugging, code generation, and blockchain exploration functionalities. 
 
+## Demo:
+https://github.com/user-attachments/assets/85197b0f-5463-48d0-9fa1-16c4ea4a4d10
+
 ## Key Features
 
 1. **Smart Contract Debugger**: Analyze and debug Aelf smart contract code written in C#. Get detailed insights into potential issues and suggestions for code improvements.
