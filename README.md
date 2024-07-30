@@ -3,7 +3,7 @@
 AelfGPT is a powerful tool designed to enhance the development experience for Aelf blockchain developers. This application integrates advanced AI technologies to offer intelligent code debugging, code generation, and blockchain exploration functionalities. 
 
 ## Demo:
-https://github.com/user-attachments/assets/85197b0f-5463-48d0-9fa1-16c4ea4a4d10
+https://github.com/user-attachments/assets/72c284b3-2522-4e10-9942-14454ed86c73
 
 ## Key Features
 
@@ -122,26 +122,16 @@ Here’s the updated README section with precise details for Cloud Run deploymen
      pip install streamlit
      ```
 
-2. **Create a Streamlit App**:
-   - Write a simple Streamlit app and save it as `app.py`:
-
-     ```python
-     import streamlit as st
-
-     st.title("Hello, Streamlit on App Engine!")
-     st.write("This is a simple Streamlit app running on Google App Engine.")
-     ```
-
-3. **Create an `app.yaml` Configuration File**:
+2. **Create an `app.yaml` Configuration File**:
    - Create a file named `app.yaml` with the following content:
 
      ```yaml
      runtime: python39
 
-     entrypoint: streamlit run app.py --server.enableCORS false --browser.serverAddress 0.0.0.0 --browser.gatherUsageStats false --server.port $PORT
+     entrypoint: streamlit run Home.py --server.enableCORS false --browser.serverAddress 0.0.0.0 --browser.gatherUsageStats false --server.port $PORT
      ```
 
-4. **Deploy the App to App Engine**:
+3. **Deploy the App to App Engine**:
    - Authenticate with Google Cloud:
 
      ```bash
@@ -160,7 +150,7 @@ Here’s the updated README section with precise details for Cloud Run deploymen
      gcloud app deploy
      ```
 
-5. **Access the App**:
+4. **Access the App**:
    - Open your app in a browser:
 
      ```bash
@@ -201,7 +191,7 @@ Here’s the updated README section with precise details for Cloud Run deploymen
      COPY . .
 
      # Run the Streamlit app
-     CMD ["streamlit", "run", "app.py", "--server.enableCORS", "false", "--browser.serverAddress", "0.0.0.0", "--browser.gatherUsageStats", "false", "--server.port", "8080"]
+     CMD ["streamlit", "run", "Home.py", "--server.enableCORS", "false", "--browser.serverAddress", "0.0.0.0", "--browser.gatherUsageStats", "false", "--server.port", "8080"]
      ```
 
    - Create a `requirements.txt` file in the root directory with the following content:
