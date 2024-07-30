@@ -1,7 +1,3 @@
-Here's a detailed README file for **AelfGPT**. This version includes setup instructions, feature descriptions, and information about the deployment and usage of the application.
-
----
-
 # AelfGPT
 
 AelfGPT is a powerful tool designed to enhance the development experience for Aelf blockchain developers. This application integrates advanced AI technologies to offer intelligent code debugging, code generation, and blockchain exploration functionalities. 
@@ -133,11 +129,3 @@ To deploy the Streamlit application using Google Cloud Run:
 ## Contributing
 
 Contributions are welcome! Please open an issue or submit a pull request if you have suggestions or improvements.
-
-## License
-
-This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
-
----
-
-Feel free to adjust the URLs, configurations, or details according to your specific setup and project needs.
