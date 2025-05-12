@@ -46,7 +46,7 @@ Create a `.env` file in the root directory of your project using the provided ex
    - **MONGODB_CONN_URI**: Your MongoDB connection URI.
    - **EDEN_AI_API_KEY**: Your Eden AI API key. Obtain it from [Eden AI](https://app.edenai.run/bricks/default).
    - **AI_ML_API_KEY**: Your GPT-4 API key from [AIML API](https://aimlapi.com/app/keys).
-   - **GOOGLE_API_KEY**: Your Google API key from [Google Cloud](https://aistudio.google.com/app/prompts/new_chat).
+   - **GOOGLE_API_KEY**: Your Google API key from [Google AI Studio](https://aistudio.google.com/app/prompts/new_chat).
 
 ### 3. Set Up Dependencies
 
